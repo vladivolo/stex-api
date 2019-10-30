@@ -38,6 +38,7 @@ func NewClient(apiKey string) *Client {
 		BaseURL:    "https://api3.stex.com",
 		UserAgent:  "Stex/golang",
 		HTTPClient: http.DefaultClient,
+		Debug:      true,
 		Logger:     log.New(os.Stderr, "Stex-golang ", log.LstdFlags),
 	}
 }
@@ -64,7 +65,7 @@ func (c *Client) parseRequest(r *request, opts ...RequestOption) (err error) {
 	bodyString := r.form.Encode()
 	header := http.Header{}
 
-	header.Set("Content-Type", "application/json")
+	header.Set("accept", "application/json")
 
 	if r.secType == secTypeAPIKey {
 		header.Set("Authorization", "Bearer "+c.APIKey)
@@ -132,7 +133,14 @@ func (c *Client) callAPI(ctx context.Context, r *request, opts ...RequestOption)
 	return data, nil
 }
 
-// NewPingService init ping service
 func (c *Client) NewPingService() *PingService {
 	return &PingService{c: c}
+}
+
+func (c *Client) NewAvailableCurrenciesService() *AvailableCurrenciesService {
+	return &AvailableCurrenciesService{c: c}
+}
+
+func (c *Client) NewCurrencyInfoByIdService() *CurrencyInfoByIdService {
+	return &CurrencyInfoByIdService{c: c}
 }

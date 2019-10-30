@@ -2,7 +2,6 @@ package stex
 
 import (
 	"context"
-	"fmt"
 )
 
 // PingService ping server
@@ -17,9 +16,6 @@ func (s *PingService) Do(ctx context.Context, opts ...RequestOption) error {
 		endpoint: "/public/ping",
 		secType:  secTypeNone,
 	}
-	data, err := s.c.callAPI(ctx, r, opts...)
-
-	fmt.Printf("PING: <%#s> <%s>\n", string(data), err)
-
+	_, err := s.c.callAPI(ctx, r, opts...)
 	return err
 }

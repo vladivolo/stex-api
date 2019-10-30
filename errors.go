@@ -7,7 +7,7 @@ import (
 // APIError define API error when response status is 4xx or 5xx
 type APIError struct {
 	Success bool   `json:"success"`
-	Message string `json:"msg"`
+	Message string `json:"message"`
 }
 
 // Error return error code and message
