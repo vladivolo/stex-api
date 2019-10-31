@@ -11,9 +11,14 @@ import (
 	"os"
 )
 
+type SortOrder string
+
 const (
 	secTypeNone secType = iota
 	secTypeAPIKey
+
+	SortDesc SortOrder = "DESC"
+	SortAsc  SortOrder = "ASC"
 )
 
 type doFunc func(req *http.Request) (*http.Response, error)
@@ -155,4 +160,24 @@ func (c *Client) NewPairsGroupsService() *PairsGroupsService {
 
 func (c *Client) NewCurrencyPairsListService() *CurrencyPairsListService {
 	return &CurrencyPairsListService{c: c}
+}
+
+func (c *Client) NewCurrencyPairsGroupsService() *CurrencyPairsGroupsService {
+	return &CurrencyPairsGroupsService{c: c}
+}
+
+func (c *Client) NewCurrencyPairInfoService() *CurrencyPairInfoService {
+	return &CurrencyPairInfoService{c: c}
+}
+
+func (c *Client) NewCurrencyPairsTickerService() *CurrencyPairsTickerService {
+	return &CurrencyPairsTickerService{c: c}
+}
+
+func (c *Client) NewCurrencyPairTickerService() *CurrencyPairTickerService {
+	return &CurrencyPairTickerService{c: c}
+}
+
+func (c *Client) NewCurrencyPairTradesService() *CurrencyPairTradesService {
+	return &CurrencyPairTradesService{c: c}
 }

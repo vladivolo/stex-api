@@ -90,3 +90,81 @@ func (s *CurrencyPairsListService) Market(market_symbol string) *CurrencyPairsLi
 	s.market_symbol = market_symbol
 	return s
 }
+
+type CurrencyPairsGroupsService struct {
+	c        *Client
+	group_id int
+}
+
+// Do send request
+func (s *CurrencyPairsGroupsService) Do(ctx context.Context, opts ...RequestOption) ([]CurrencyPair, error) {
+	if s.group_id == 0 {
+		return nil, fmt.Errorf("group_id not init")
+	}
+
+	r := &request{
+		method:   "GET",
+		endpoint: fmt.Sprintf("/public/currency_pairs/group/%d", s.group_id),
+		secType:  secTypeNone,
+	}
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	res := struct {
+		APIError
+		Data []CurrencyPair `json:"data"`
+	}{}
+
+	err = json.Unmarshal(data, &res)
+	if err != nil {
+		return nil, err
+	}
+
+	return res.Data, err
+}
+
+func (s *CurrencyPairsGroupsService) GroupId(group_id int) *CurrencyPairsGroupsService {
+	s.group_id = group_id
+	return s
+}
+
+type CurrencyPairInfoService struct {
+	c       *Client
+	pair_id int
+}
+
+// Do send request
+func (s *CurrencyPairInfoService) Do(ctx context.Context, opts ...RequestOption) (*CurrencyPair, error) {
+	if s.pair_id == 0 {
+		return nil, fmt.Errorf("pair_id not init")
+	}
+
+	r := &request{
+		method:   "GET",
+		endpoint: fmt.Sprintf("/public/currency_pairs/%d", s.pair_id),
+		secType:  secTypeNone,
+	}
+	data, err := s.c.callAPI(ctx, r, opts...)
+	if err != nil {
+		return nil, err
+	}
+
+	res := struct {
+		APIError
+		Data CurrencyPair `json:"data"`
+	}{}
+
+	err = json.Unmarshal(data, &res)
+	if err != nil {
+		return nil, err
+	}
+
+	return &res.Data, err
+}
+
+func (s *CurrencyPairInfoService) PairId(pair_id int) *CurrencyPairInfoService {
+	s.pair_id = pair_id
+	return s
+}
