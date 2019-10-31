@@ -17,24 +17,24 @@ type ProtocolSpecificSettings struct {
 }
 
 type CurrencyInfo struct {
-	Id                        int                         `json:"id"`
-	Code                      string                      `json:"code"`
-	Name                      string                      `json:"name"`
-	Active                    bool                        `json:"active"`
-	Delisted                  bool                        `json:"delisted"`
-	Precision                 int                         `json:"precision"`
-	MinimumWithdrawalAmount   string                      `json:"minimum_withdrawal_amount"`
-	MinimumDepositAmount      string                      `json:"minimum_deposit_amount"`
-	DepositFeeCurrencyId      int                         `json:"deposit_fee_currency_id"`
-	DepositFeeCurrencyCode    string                      `json:"deposit_fee_currency_code"`
-	DepositFeeConst           string                      `json:"deposit_fee_const"`
-	DepositFeePercent         string                      `json:"deposit_fee_percent"`
-	WithdrawalFeeCurrencyId   int                         `json:"withdrawal_fee_currency_id"`
-	WithdrawalFeeCurrencyCode string                      `json:"withdrawal_fee_currency_code"`
-	WithdrawalFeeConst        string                      `json:"withdrawal_fee_const"`
-	WithdrawalFeePercent      string                      `json:"withdrawal_fee_percent"`
-	BlockExplorerUrl          string                      `json:"block_explorer_url"`
-	ProtocolSpecificSettings  *[]ProtocolSpecificSettings `json:"protocol_specific_settings"`
+	Id                        int                        `json:"id"`
+	Code                      string                     `json:"code"`
+	Name                      string                     `json:"name"`
+	Active                    bool                       `json:"active"`
+	Delisted                  bool                       `json:"delisted"`
+	Precision                 int                        `json:"precision"`
+	MinimumWithdrawalAmount   string                     `json:"minimum_withdrawal_amount"`
+	MinimumDepositAmount      string                     `json:"minimum_deposit_amount"`
+	DepositFeeCurrencyId      int                        `json:"deposit_fee_currency_id"`
+	DepositFeeCurrencyCode    string                     `json:"deposit_fee_currency_code"`
+	DepositFeeConst           string                     `json:"deposit_fee_const"`
+	DepositFeePercent         string                     `json:"deposit_fee_percent"`
+	WithdrawalFeeCurrencyId   int                        `json:"withdrawal_fee_currency_id"`
+	WithdrawalFeeCurrencyCode string                     `json:"withdrawal_fee_currency_code"`
+	WithdrawalFeeConst        string                     `json:"withdrawal_fee_const"`
+	WithdrawalFeePercent      string                     `json:"withdrawal_fee_percent"`
+	BlockExplorerUrl          string                     `json:"block_explorer_url"`
+	ProtocolSpecificSettings  []ProtocolSpecificSettings `json:"protocol_specific_settings"`
 }
 
 type AvailableCurrenciesService struct {

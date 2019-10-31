@@ -144,3 +144,15 @@ func (c *Client) NewAvailableCurrenciesService() *AvailableCurrenciesService {
 func (c *Client) NewCurrencyInfoByIdService() *CurrencyInfoByIdService {
 	return &CurrencyInfoByIdService{c: c}
 }
+
+func (c *Client) NewAvailableMarketsService() *AvailableMarketsService {
+	return &AvailableMarketsService{c: c}
+}
+
+func (c *Client) NewPairsGroupsService() *PairsGroupsService {
+	return &PairsGroupsService{c: c}
+}
+
+func (c *Client) NewCurrencyPairsListService() *CurrencyPairsListService {
+	return &CurrencyPairsListService{c: c}
+}
