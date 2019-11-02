@@ -14,6 +14,8 @@ import (
 type SortOrder string
 type CandleType string
 type OrderType string
+type OrderStatus string
+type TradeType string
 
 const (
 	secTypeNone secType = iota
@@ -34,6 +36,15 @@ const (
 	OrderType_SELL            OrderType = "SELL"
 	OrderType_STOP_LIMIT_BUY  OrderType = "STOP_LIMIT_BUY"
 	OrderType_STOP_LIMIT_SELL OrderType = "STOP_LIMIT_SELL"
+
+	TradeType_BUY  TradeType = "BUY"
+	TradeType_SELL TradeType = "SELL"
+
+	OrderStatus_ALL         OrderStatus = "ALL"
+	OrderStatus_FINISHED    OrderStatus = "FINISHED"
+	OrderStatus_CANCELLED   OrderStatus = "CANCELLED"
+	OrderStatus_PARTIAL     OrderStatus = "PARTIAL"
+	OrderStatus_WITH_TRADES OrderStatus = "WITH_TRADES"
 )
 
 type doFunc func(req *http.Request) (*http.Response, error)
@@ -251,4 +262,16 @@ func (c *Client) NewOrderInfoService() *OrderInfoService {
 
 func (c *Client) NewOrderDeleteService() *OrderDeleteService {
 	return &OrderDeleteService{c: c}
+}
+
+func (c *Client) NewOrdersHistoryService() *OrdersHistoryService {
+	return &OrdersHistoryService{c: c}
+}
+
+func (c *Client) NewTradesOrderHistoryService() *TradesOrderHistoryService {
+	return &TradesOrderHistoryService{c: c}
+}
+
+func (c *Client) NewCurrencyPairTradesHistoryService() *CurrencyPairTradesHistoryService {
+	return &CurrencyPairTradesHistoryService{c: c}
 }
