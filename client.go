@@ -13,6 +13,7 @@ import (
 
 type SortOrder string
 type CandleType string
+type OrderType string
 
 const (
 	secTypeNone secType = iota
@@ -28,6 +29,11 @@ const (
 	CandleType4h  CandleType = "240"
 	CandleType12h CandleType = "720"
 	CandleType1d  CandleType = "1D"
+
+	OrderType_BUY             OrderType = "BUY"
+	OrderType_SELL            OrderType = "SELL"
+	OrderType_STOP_LIMIT_BUY  OrderType = "STOP_LIMIT_BUY"
+	OrderType_STOP_LIMIT_SELL OrderType = "STOP_LIMIT_SELL"
 )
 
 type doFunc func(req *http.Request) (*http.Response, error)
@@ -213,4 +219,36 @@ func (c *Client) NewWithdrawalStatusesService() *WithdrawalStatusesService {
 
 func (c *Client) NewWithdrawalStatusByIdService() *WithdrawalStatusByIdService {
 	return &WithdrawalStatusByIdService{c: c}
+}
+
+func (c *Client) NewCurrencyPairFeeService() *CurrencyPairFeeService {
+	return &CurrencyPairFeeService{c: c}
+}
+
+func (c *Client) NewOpenOrdersListService() *OpenOrdersListService {
+	return &OpenOrdersListService{c: c}
+}
+
+func (c *Client) NewOpenOrdersDeleteService() *OpenOrdersDeleteService {
+	return &OpenOrdersDeleteService{c: c}
+}
+
+func (c *Client) NewCurrencyPairOpenOrdersListService() *CurrencyPairOpenOrdersListService {
+	return &CurrencyPairOpenOrdersListService{c: c}
+}
+
+func (c *Client) NewCurrencyPairOpenOrdersDeleteService() *CurrencyPairOpenOrdersDeleteService {
+	return &CurrencyPairOpenOrdersDeleteService{c: c}
+}
+
+func (c *Client) NewCreateOrderService() *CreateOrderService {
+	return &CreateOrderService{c: c}
+}
+
+func (c *Client) NewOrderInfoService() *OrderInfoService {
+	return &OrderInfoService{c: c}
+}
+
+func (c *Client) NewOrderDeleteService() *OrderDeleteService {
+	return &OrderDeleteService{c: c}
 }

@@ -68,6 +68,11 @@ func (s *CurrencyPairOrderbookService) Do(ctx context.Context, opts ...RequestOp
 	return &res.Data, err
 }
 
+func (s *CurrencyPairOrderbookService) CurrencyPairId(pair_id int) *CurrencyPairOrderbookService {
+	s.pair_id = &pair_id
+	return s
+}
+
 func (s *CurrencyPairOrderbookService) BidsLimit(limit int) *CurrencyPairOrderbookService {
 	s.limit_bids = &limit
 	return s
