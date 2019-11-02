@@ -20,7 +20,7 @@ type WithdrawalStatusesService struct {
 func (s *WithdrawalStatusesService) Do(ctx context.Context, opts ...RequestOption) ([]Withdrawal, error) {
 	r := &request{
 		method:   "GET",
-		endpoint: fmt.Sprintf("/public/withdrawal-statuses"),
+		endpoint: "/public/withdrawal-statuses",
 		secType:  secTypeNone,
 	}
 
@@ -76,4 +76,9 @@ func (s *WithdrawalStatusByIdService) Do(ctx context.Context, opts ...RequestOpt
 	}
 
 	return &res.Data, err
+}
+
+func (s *WithdrawalStatusByIdService) Id(id int64) *WithdrawalStatusByIdService {
+	s.id = &id
+	return s
 }

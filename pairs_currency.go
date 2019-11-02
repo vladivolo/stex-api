@@ -6,32 +6,6 @@ import (
 	"fmt"
 )
 
-/*
-"id": 1,
-"currency_id": 2,
-"currency_code": "ETH",
-"currency_name": "Etherium",
-"market_currency_id": 1,
-"market_code": "BTC",
-"market_name": "Bitcoin",
-"min_order_amount": "0.0000001",
-"min_buy_price": "0.0000001",
-"min_sell_price": "0.0000001",
-"buy_fee_percent": "0",
-"sell_fee_percent": "0",
-"active": true,
-"delisted": false,
-"pair_message": "Happy trading!",
-"currency_precision": 8,
-"market_precision": 8,
-"symbol": "ETH_BTC",
-"group_name": "Fiat coins",
-"group_id": 1,
-"amount_multiplier": 1
-*/
-
-///public/currency_pairs/list/{code}
-
 type CurrencyPair struct {
 	Id                int    `json:"id"`
 	CurrencyId        int    `json:"currency_id"`

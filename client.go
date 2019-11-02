@@ -190,3 +190,27 @@ func (c *Client) NewCurrencyPairTickerService() *CurrencyPairTickerService {
 func (c *Client) NewCurrencyPairTradesService() *CurrencyPairTradesService {
 	return &CurrencyPairTradesService{c: c}
 }
+
+func (c *Client) NewCurrencyPairOrderbookService() *CurrencyPairOrderbookService {
+	return &CurrencyPairOrderbookService{c: c}
+}
+
+func (c *Client) NewCurrencyPairChartService() *CurrencyPairChartService {
+	return &CurrencyPairChartService{c: c}
+}
+
+func (c *Client) NewDepositStatusesService() *DepositStatusesService {
+	return &DepositStatusesService{c: c}
+}
+
+func (c *Client) NewDepositStatusByIdService() *DepositStatusByIdService {
+	return &DepositStatusByIdService{c: c}
+}
+
+func (c *Client) NewWithdrawalStatusesService() *WithdrawalStatusesService {
+	return &WithdrawalStatusesService{c: c}
+}
+
+func (c *Client) NewWithdrawalStatusByIdService() *WithdrawalStatusByIdService {
+	return &WithdrawalStatusByIdService{c: c}
+}

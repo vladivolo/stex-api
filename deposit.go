@@ -20,7 +20,7 @@ type DepositStatusesService struct {
 func (s *DepositStatusesService) Do(ctx context.Context, opts ...RequestOption) ([]Deposit, error) {
 	r := &request{
 		method:   "GET",
-		endpoint: fmt.Sprintf("/public/deposit-statuses"),
+		endpoint: "/public/deposit-statuses",
 		secType:  secTypeNone,
 	}
 
@@ -76,4 +76,9 @@ func (s *DepositStatusByIdService) Do(ctx context.Context, opts ...RequestOption
 	}
 
 	return &res.Data, err
+}
+
+func (s *DepositStatusByIdService) Id(id int64) *DepositStatusByIdService {
+	s.id = &id
+	return s
 }

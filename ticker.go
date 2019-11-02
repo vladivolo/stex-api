@@ -6,33 +6,6 @@ import (
 	"fmt"
 )
 
-/*
-"data": [
-      {
-        "id": 1,
-        "amount_multiplier": 1,
-        "currency_code": "ETH",
-        "market_code": "BTC",
-        "currency_name": "Etherium",
-        "market_name": "Bitcoin",
-        "symbol": "ETH_BTC",
-        "group_name": "FIAT coins",
-        "group_id": 1,
-        "ask": "0.03377988",
-        "bid": "0.03350001",
-        "last": "0.0337",
-        "low": "0.03320157",
-        "high": "0.0341",
-        "open": "0.03340002",
-        "volume": "5.1939",
-        "volumeQuote": "154.12169946",
-        "fiatsRate": {
-          "BTC": 0.000001
-        },
-        "timestamp": 1538737692
-      }
-*/
-
 type CurrencyPairTicker struct {
 	Id               int                `json:"id"`
 	AmountMultiplier int                `json:"amount_multiplier"`
@@ -119,7 +92,7 @@ func (s *CurrencyPairTickerService) Do(ctx context.Context, opts ...RequestOptio
 	return &res.Data, err
 }
 
-func (s *CurrencyPairTickerService) PairId(pair_id int) *CurrencyPairTickerService {
+func (s *CurrencyPairTickerService) CurrencyPairId(pair_id int) *CurrencyPairTickerService {
 	s.pair_id = &pair_id
 	return s
 }
