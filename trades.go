@@ -16,44 +16,47 @@ type CurrencyPairTrades struct {
 }
 
 type CurrencyPairTradesService struct {
-	c       *Client
-	pair_id int
-	sort    SortOrder
-	from    int64
-	till    int64
-	limit   int
-	offset  int
+	c *Client
+
+	pair_id *int
+	sort    *SortOrder
+	from    *int64
+	till    *int64
+	limit   *int
+	offset  *int
 }
 
 // Do send request
 func (s *CurrencyPairTradesService) Do(ctx context.Context, opts ...RequestOption) ([]CurrencyPairTrades, error) {
-	if s.pair_id == 0 {
+	if s.pair_id == nil {
 		return nil, fmt.Errorf("pair_id not init")
 	}
 
 	r := &request{
 		method:   "GET",
-		endpoint: fmt.Sprintf("/public/trades/%d", s.pair_id),
+		endpoint: fmt.Sprintf("/public/trades/%d", *s.pair_id),
 		secType:  secTypeNone,
 	}
 
-	if s.from != 0 {
-		r.setParam("from", s.from)
+	if s.from != nil {
+		r.setParam("from", *s.from)
 	}
 
-	if s.till != 0 {
-		r.setParam("till", s.till)
+	if s.till != nil {
+		r.setParam("till", *s.till)
 	}
 
-	if s.sort != "" {
-		r.setParam("sort", s.sort)
+	if s.sort != nil {
+		r.setParam("sort", *s.sort)
 	}
 
-	if s.limit != 0 {
-		r.setParam("limit", s.limit)
+	if s.limit != nil {
+		r.setParam("limit", *s.limit)
 	}
 
-	r.setParam("offset", s.offset)
+	if s.offset != nil {
+		r.setParam("offset", *s.offset)
+	}
 
 	data, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
@@ -74,31 +77,33 @@ func (s *CurrencyPairTradesService) Do(ctx context.Context, opts ...RequestOptio
 }
 
 func (s *CurrencyPairTradesService) CurrencyPairId(pair_id int) *CurrencyPairTradesService {
-	s.pair_id = pair_id
+	s.pair_id = &pair_id
 	return s
 }
 
 func (s *CurrencyPairTradesService) Sort(order SortOrder) *CurrencyPairTradesService {
-	s.sort = order
+	s.sort = &order
 	return s
 }
 
 func (s *CurrencyPairTradesService) From(tm time.Time) *CurrencyPairTradesService {
-	s.from = tm.Unix()
+	from := tm.Unix()
+	s.from = &from
 	return s
 }
 
 func (s *CurrencyPairTradesService) Till(tm time.Time) *CurrencyPairTradesService {
-	s.till = tm.Unix()
+	till := tm.Unix()
+	s.till = &till
 	return s
 }
 
 func (s *CurrencyPairTradesService) Limit(limit int) *CurrencyPairTradesService {
-	s.limit = limit
+	s.limit = &limit
 	return s
 }
 
 func (s *CurrencyPairTradesService) Offset(offset int) *CurrencyPairTradesService {
-	s.offset = offset
+	s.offset = &offset
 	return s
 }

@@ -12,6 +12,7 @@ import (
 )
 
 type SortOrder string
+type CandleType string
 
 const (
 	secTypeNone secType = iota
@@ -19,6 +20,14 @@ const (
 
 	SortDesc SortOrder = "DESC"
 	SortAsc  SortOrder = "ASC"
+
+	CandleType1m  CandleType = "1"
+	CandleType5m  CandleType = "5"
+	CandleType30m CandleType = "30"
+	CandleType1h  CandleType = "60"
+	CandleType4h  CandleType = "240"
+	CandleType12h CandleType = "720"
+	CandleType1d  CandleType = "1D"
 )
 
 type doFunc func(req *http.Request) (*http.Response, error)

@@ -85,19 +85,20 @@ func (s *CurrencyPairsTickerService) Do(ctx context.Context, opts ...RequestOpti
 }
 
 type CurrencyPairTickerService struct {
-	c       *Client
-	pair_id int
+	c *Client
+
+	pair_id *int
 }
 
 // Do send request
 func (s *CurrencyPairTickerService) Do(ctx context.Context, opts ...RequestOption) (*CurrencyPairTicker, error) {
-	if s.pair_id == 0 {
+	if s.pair_id == nil {
 		return nil, fmt.Errorf("pair_id not init")
 	}
 
 	r := &request{
 		method:   "GET",
-		endpoint: fmt.Sprintf("/public/ticker/%d", s.pair_id),
+		endpoint: fmt.Sprintf("/public/ticker/%d", *s.pair_id),
 		secType:  secTypeNone,
 	}
 	data, err := s.c.callAPI(ctx, r, opts...)
@@ -119,6 +120,6 @@ func (s *CurrencyPairTickerService) Do(ctx context.Context, opts ...RequestOptio
 }
 
 func (s *CurrencyPairTickerService) PairId(pair_id int) *CurrencyPairTickerService {
-	s.pair_id = pair_id
+	s.pair_id = &pair_id
 	return s
 }

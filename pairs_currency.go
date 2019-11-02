@@ -58,14 +58,14 @@ type CurrencyPair struct {
 
 type CurrencyPairsListService struct {
 	c             *Client
-	market_symbol string //ETH_BTC
+	market_symbol *string //ETH_BTC
 }
 
 // Do send request
 func (s *CurrencyPairsListService) Do(ctx context.Context, opts ...RequestOption) ([]CurrencyPair, error) {
 	r := &request{
 		method:   "GET",
-		endpoint: fmt.Sprintf("/public/currency_pairs/list/%s", s.market_symbol),
+		endpoint: fmt.Sprintf("/public/currency_pairs/list/%s", *s.market_symbol),
 		secType:  secTypeNone,
 	}
 	data, err := s.c.callAPI(ctx, r, opts...)
@@ -87,24 +87,25 @@ func (s *CurrencyPairsListService) Do(ctx context.Context, opts ...RequestOption
 }
 
 func (s *CurrencyPairsListService) Market(market_symbol string) *CurrencyPairsListService {
-	s.market_symbol = market_symbol
+	s.market_symbol = &market_symbol
 	return s
 }
 
 type CurrencyPairsGroupsService struct {
-	c        *Client
-	group_id int
+	c *Client
+
+	group_id *int
 }
 
 // Do send request
 func (s *CurrencyPairsGroupsService) Do(ctx context.Context, opts ...RequestOption) ([]CurrencyPair, error) {
-	if s.group_id == 0 {
+	if s.group_id == nil {
 		return nil, fmt.Errorf("group_id not init")
 	}
 
 	r := &request{
 		method:   "GET",
-		endpoint: fmt.Sprintf("/public/currency_pairs/group/%d", s.group_id),
+		endpoint: fmt.Sprintf("/public/currency_pairs/group/%d", *s.group_id),
 		secType:  secTypeNone,
 	}
 	data, err := s.c.callAPI(ctx, r, opts...)
@@ -126,24 +127,25 @@ func (s *CurrencyPairsGroupsService) Do(ctx context.Context, opts ...RequestOpti
 }
 
 func (s *CurrencyPairsGroupsService) GroupId(group_id int) *CurrencyPairsGroupsService {
-	s.group_id = group_id
+	s.group_id = &group_id
 	return s
 }
 
 type CurrencyPairInfoService struct {
-	c       *Client
-	pair_id int
+	c *Client
+
+	pair_id *int
 }
 
 // Do send request
 func (s *CurrencyPairInfoService) Do(ctx context.Context, opts ...RequestOption) (*CurrencyPair, error) {
-	if s.pair_id == 0 {
+	if s.pair_id == nil {
 		return nil, fmt.Errorf("pair_id not init")
 	}
 
 	r := &request{
 		method:   "GET",
-		endpoint: fmt.Sprintf("/public/currency_pairs/%d", s.pair_id),
+		endpoint: fmt.Sprintf("/public/currency_pairs/%d", *s.pair_id),
 		secType:  secTypeNone,
 	}
 	data, err := s.c.callAPI(ctx, r, opts...)
@@ -165,6 +167,6 @@ func (s *CurrencyPairInfoService) Do(ctx context.Context, opts ...RequestOption)
 }
 
 func (s *CurrencyPairInfoService) PairId(pair_id int) *CurrencyPairInfoService {
-	s.pair_id = pair_id
+	s.pair_id = &pair_id
 	return s
 }

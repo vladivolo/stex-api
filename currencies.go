@@ -67,7 +67,7 @@ func (s *AvailableCurrenciesService) Do(ctx context.Context, opts ...RequestOpti
 }
 
 type CurrencyInfoByIdService struct {
-	currency_id int
+	currency_id *int
 	c           *Client
 }
 
@@ -78,13 +78,13 @@ type CurrencyInfoByIdResponse struct {
 
 // Do send request
 func (s *CurrencyInfoByIdService) Do(ctx context.Context, opts ...RequestOption) (CurrencyInfo, error) {
-	if s.currency_id == 0 {
+	if s.currency_id == nil {
 		return CurrencyInfo{}, fmt.Errorf("CurrencyId not init")
 	}
 
 	r := &request{
 		method:   "GET",
-		endpoint: fmt.Sprintf("/public/currencies/%d", s.currency_id),
+		endpoint: fmt.Sprintf("/public/currencies/%d", *s.currency_id),
 		secType:  secTypeNone,
 	}
 	data, err := s.c.callAPI(ctx, r, opts...)
@@ -106,6 +106,6 @@ func (s *CurrencyInfoByIdService) Do(ctx context.Context, opts ...RequestOption)
 }
 
 func (s *CurrencyInfoByIdService) Id(currency_id int) *CurrencyInfoByIdService {
-	s.currency_id = currency_id
+	s.currency_id = &currency_id
 	return s
 }
