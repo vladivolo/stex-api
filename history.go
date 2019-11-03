@@ -186,7 +186,7 @@ func (s *CurrencyPairTradesHistoryService) Do(ctx context.Context, opts ...Reque
 
 	r := &request{
 		method:   "GET",
-		endpoint: fmt.Sprintf("/reports/trades/%d", s.pair_id),
+		endpoint: fmt.Sprintf("/reports/trades/%d", *s.pair_id),
 		secType:  secTypeAPIKey,
 	}
 

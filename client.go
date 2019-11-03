@@ -16,6 +16,7 @@ type CandleType string
 type OrderType string
 type OrderStatus string
 type TradeType string
+type SortBalanceField string
 
 const (
 	secTypeNone secType = iota
@@ -23,6 +24,11 @@ const (
 
 	SortDesc SortOrder = "DESC"
 	SortAsc  SortOrder = "ASC"
+
+	SortByBalance SortBalanceField = "BALANCE"
+	SortByFrozen  SortBalanceField = "FROZEN"
+	SortByBonus   SortBalanceField = "BONUS"
+	SortByTotal   SortBalanceField = "TOTAL"
 
 	CandleType1m  CandleType = "1"
 	CandleType5m  CandleType = "5"
@@ -305,4 +311,80 @@ func (c *Client) NewTradesOrderHistoryService() *TradesOrderHistoryService {
 // Returns a list of all trades that conform the filters given in a request string
 func (c *Client) NewCurrencyPairTradesHistoryService() *CurrencyPairTradesHistoryService {
 	return &CurrencyPairTradesHistoryService{c: c}
+}
+
+// Get general information about the current user
+func (c *Client) NewProfileInfoService() *ProfileInfoService {
+	return &ProfileInfoService{c: c}
+}
+
+// Get a list of user wallets
+func (c *Client) NewProfileWalletListService() *ProfileWalletListService {
+	return &ProfileWalletListService{c: c}
+}
+
+// Single wallet information
+func (c *Client) NewProfileWalletInfoService() *ProfileWalletInfoService {
+	return &ProfileWalletInfoService{c: c}
+}
+
+// Create a wallet for given currency
+func (c *Client) NewProfileWalletCreateService() *ProfileWalletCreateService {
+	return &ProfileWalletCreateService{c: c}
+}
+
+// Get deposit address for given wallet
+func (c *Client) NewProfileWalletAddressInfoService() *ProfileWalletAddressInfoService {
+	return &ProfileWalletAddressInfoService{c: c}
+}
+
+// This method allows to generate deposit address if no address was previously generated. It is also allowed to re-generate new address for some currencies.
+func (c *Client) NewProfileWalletAddressCreateService() *ProfileWalletAddressCreateService {
+	return &ProfileWalletAddressCreateService{c: c}
+}
+
+// Returns a list of deposits the user has made to the exchange according to the filters and parameters passed in the request.
+// Allows to filter deposits by currency, date range etc.
+func (c *Client) NewProfileDepositsListService() *ProfileDepositsListService {
+	return &ProfileDepositsListService{c: c}
+}
+
+// Get deposit by id
+func (c *Client) NewProfileDepositInfoService() *ProfileDepositInfoService {
+	return &ProfileDepositInfoService{c: c}
+}
+
+// Get a list of withdrawals made by user
+func (c *Client) NewProfileWithdrawalListService() *ProfileWithdrawalListService {
+	return &ProfileWithdrawalListService{c: c}
+}
+
+// Get withdrawal by id
+func (c *Client) NewProfileWithdrawalInfoService() *ProfileWithdrawalInfoService {
+	return &ProfileWithdrawalInfoService{c: c}
+}
+
+// Create withdrawal request
+func (c *Client) NewProfileWithdrawalCreateService() *ProfileWithdrawalCreateService {
+	return &ProfileWithdrawalCreateService{c: c}
+}
+
+// Cancel unconfirmed withdrawal
+func (c *Client) NewProfileWithdrawalCancelService() *ProfileWithdrawalCancelService {
+	return &ProfileWithdrawalCancelService{c: c}
+}
+
+// Get notifications
+func (c *Client) NewProfileNotificationsService() *ProfileNotificationsService {
+	return &ProfileNotificationsService{c: c}
+}
+
+// Create referral program
+func (c *Client) NewProfileReferralCreateService() *ProfileReferralCreateService {
+	return &ProfileReferralCreateService{c: c}
+}
+
+// Insert referral code
+func (c *Client) NewProfileReferralSetService() *ProfileReferralSetService {
+	return &ProfileReferralSetService{c: c}
 }
