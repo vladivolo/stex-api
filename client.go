@@ -193,8 +193,8 @@ func (c *Client) NewPairsGroupsService() *PairsGroupsService {
 
 // Returns a list of avialable currency pairs in the given market if {code} is one of the values returned by /public/markets.
 // Returns all available currency pairs if ALL passed as a {code}
-func (c *Client) NewCurrencyPairsListService() *CurrencyPairsListService {
-	return &CurrencyPairsListService{c: c}
+func (c *Client) NewCurrencyPairsMarketListService() *CurrencyPairsMarketListService {
+	return &CurrencyPairsMarketListService{c: c}
 }
 
 // Returns a list of avialable currency pairs in the given currency pair group

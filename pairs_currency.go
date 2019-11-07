@@ -30,13 +30,19 @@ type CurrencyPair struct {
 	AmountMultiplier  int    `json:"amount_multiplier"`
 }
 
-type CurrencyPairsListService struct {
+type CurrencyPairsMarketListService struct {
 	c             *Client
-	market_symbol *string //ETH_BTC
+	market_symbol *string //BTC/ETH/...
 }
 
 // Do send request
-func (s *CurrencyPairsListService) Do(ctx context.Context, opts ...RequestOption) ([]CurrencyPair, error) {
+func (s *CurrencyPairsMarketListService) Do(ctx context.Context, opts ...RequestOption) ([]CurrencyPair, error) {
+	if s.market_symbol == nil {
+		all := "ALL"
+
+		s.market_symbol = &all
+	}
+
 	r := &request{
 		method:   "GET",
 		endpoint: fmt.Sprintf("/public/currency_pairs/list/%s", *s.market_symbol),
@@ -60,7 +66,7 @@ func (s *CurrencyPairsListService) Do(ctx context.Context, opts ...RequestOption
 	return res.Data, err
 }
 
-func (s *CurrencyPairsListService) Market(market_symbol string) *CurrencyPairsListService {
+func (s *CurrencyPairsMarketListService) Market(market_symbol string) *CurrencyPairsMarketListService {
 	s.market_symbol = &market_symbol
 	return s
 }
