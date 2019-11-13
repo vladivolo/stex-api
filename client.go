@@ -63,7 +63,8 @@ type Client struct {
 	HTTPClient *http.Client
 	Debug      bool
 	Logger     *log.Logger
-	do         doFunc
+
+	do doFunc
 }
 
 // NewClient initialize an API client instance with API key and secret key.
