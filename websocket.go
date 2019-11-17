@@ -2,36 +2,29 @@ package stex
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
+	"sync"
 	"time"
 
 	ws "github.com/vladivolo/golang-socketio"
 	"github.com/vladivolo/golang-socketio/transport"
 )
 
-// NOTE: All Callback func Sync!!!
-
-type SideType string
-
-const ()
-
 type WssClient struct {
+	sync.Mutex
+
 	APIKey    string
 	BaseURL   string
 	UserAgent string
 	Debug     bool
 	Logger    *log.Logger
 
-	Channel   string
-	EventName string
-	Auth      bool
+	connected bool
 
-	OnMessage    interface{}
-	OnDisconnect func(string)
-	OnError      func(string)
-	OnConnection func(string)
+	OnDisconnect func()
+	OnError      func()
+	OnConnection func()
 
 	c *ws.Client
 }
@@ -52,29 +45,50 @@ func (w *WssClient) debug(format string, v ...interface{}) {
 	}
 }
 
-func (w *WssClient) subscribe() error {
-	auth := ""
-	if w.Auth == true {
-		auth = w.APIKey
+func (w *WssClient) Subscribe(channel string, auth bool) error {
+	auth_token := map[string]interface{}{}
+	if auth == true {
+		auth_token = map[string]interface{}{
+			"headers": map[string]interface{}{
+				"Authorization": "Bearer " + w.APIKey,
+			},
+		}
 	}
 
 	return w.c.Emit("subscribe", map[string]interface{}{
-		"channel": w.Channel,
-		"auth":    auth,
+		"channel": channel,
+		"auth":    auth_token,
 	})
 }
 
+func (w *WssClient) C() *ws.Client {
+	return w.c
+}
+
+func (w *WssClient) SetConnected(status bool) {
+	w.Lock()
+	defer w.Unlock()
+
+	w.connected = status
+}
+
+func (w *WssClient) IsConnected() bool {
+	w.Lock()
+	defer w.Unlock()
+
+	return w.connected
+}
+
 func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) error {
-	if w.OnMessage == nil {
-		return fmt.Errorf("Don't init onMessage callback")
-	}
+	w.Lock()
+	defer w.Unlock()
 
 	var err error
 
 	w.c, err = ws.Dial(
 		w.BaseURL,
 		&transport.WebsocketTransport{
-			PingInterval:   15 * time.Second,
+			PingInterval:   10 * time.Second,
 			PingTimeout:    60 * time.Second,
 			ReceiveTimeout: 60 * time.Second,
 			SendTimeout:    60 * time.Second,
@@ -83,14 +97,17 @@ func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) error {
 	)
 
 	if err != nil {
-		w.debug("channel %s Dial: %s", w.Channel, err)
+		w.debug("Dial: %s", err)
 		return err
 	}
 
 	err = w.c.On(ws.OnDisconnection, func(h *ws.Channel) {
-		w.debug("channel %s OnDisconnection", w.Channel)
+		w.debug("OnDisconnection")
+
+		w.SetConnected(false)
+
 		if w.OnDisconnect != nil {
-			w.OnDisconnect(w.Channel)
+			w.OnDisconnect()
 		}
 	})
 	if err != nil {
@@ -98,9 +115,9 @@ func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) error {
 	}
 
 	err = w.c.On(ws.OnError, func(h *ws.Channel) {
-		w.debug("channel %s OnError", w.Channel)
+		w.debug("OnError:", err)
 		if w.OnError != nil {
-			w.OnError(w.Channel)
+			w.OnError()
 		}
 	})
 	if err != nil {
@@ -108,23 +125,14 @@ func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) error {
 	}
 
 	err = w.c.On(ws.OnConnection, func(h *ws.Channel) {
-		w.debug("channel %s OnConnection", w.Channel)
-		err := w.subscribe()
-		if err != nil {
-			w.debug("channel %s subscribe error", w.Channel)
-			if w.OnError != nil {
-				w.OnError(w.Channel)
-			}
-		}
+		w.debug("OnConnection")
+
+		w.SetConnected(true)
+
 		if w.OnConnection != nil {
-			w.OnConnection(w.Channel)
+			w.OnConnection()
 		}
 	})
-	if err != nil {
-		return err
-	}
-
-	err = w.c.On(w.EventName, w.OnMessage)
 	if err != nil {
 		return err
 	}
@@ -141,10 +149,22 @@ func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) error {
 	return nil
 }
 
-func NewWebsocketRateChannelService() *WebsocketRateChannelService {
-	return &WebsocketRateChannelService{c: newWssClient("")}
+func NewWebsocketRateChannelService(c *WssClient) *WebsocketRateChannelService {
+	return &WebsocketRateChannelService{c: c}
 }
 
-func NewWebsocketGlassRowChangedService() *WebsocketGlassRowChangedService {
-	return &WebsocketGlassRowChangedService{c: newWssClient("")}
+func NewWebsocketGlassRowChangedService(c *WssClient) *WebsocketGlassRowChangedService {
+	return &WebsocketGlassRowChangedService{c: c}
+}
+
+func NewWebsocketUserOrderFillChannelService(c *WssClient) *WebsocketUserOrderFillChannelService {
+	return &WebsocketUserOrderFillChannelService{c: c}
+}
+
+func NewWebsocketUserOrderDeletedChannelService(c *WssClient) *WebsocketUserOrderDeletedChannelService {
+	return &WebsocketUserOrderDeletedChannelService{c: c}
+}
+
+func NewWebsocketUserOrderUpdateChannelService(c *WssClient) *WebsocketUserOrderUpdateChannelService {
+	return &WebsocketUserOrderUpdateChannelService{c: c}
 }

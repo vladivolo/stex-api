@@ -22,38 +22,26 @@ type RateMessage struct {
 type WebsocketRateChannelService struct {
 	c *WssClient
 
-	onMessage func(string, RateMessage)
+	f func(string, RateMessage)
 }
 
 func (s *WebsocketRateChannelService) Do(ctx context.Context, opts ...RequestOption) error {
-	s.c.Channel = "rate"
-	s.c.EventName = "App\\\\Events\\\\Ticker"
+	err := s.c.Subscribe("rate", false)
+	if err != nil {
+		return err
+	}
 
-	return s.c.Do(ctx, opts...)
+	err = s.c.C().On("App\\\\Events\\\\Ticker", func(h *ws.Channel, msg RateMessage) {
+		s.f("rate", msg)
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *WebsocketRateChannelService) OnMessage(f func(string, RateMessage)) *WebsocketRateChannelService {
-	s.onMessage = f
-
-	// Hack. Will be refactored after understanding the package reflect
-	s.c.OnMessage = func(h *ws.Channel, msg RateMessage) {
-		s.onMessage(s.c.Channel, msg)
-	}
-
-	return s
-}
-
-func (s *WebsocketRateChannelService) OnDisconnect(f func(string)) *WebsocketRateChannelService {
-	s.c.OnDisconnect = f
-	return s
-}
-
-func (s *WebsocketRateChannelService) OnError(f func(string)) *WebsocketRateChannelService {
-	s.c.OnError = f
-	return s
-}
-
-func (s *WebsocketRateChannelService) OnConnection(f func(string)) *WebsocketRateChannelService {
-	s.c.OnConnection = f
+	s.f = f
 	return s
 }

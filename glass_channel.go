@@ -14,14 +14,32 @@ type WebsocketGlassRowChangedService struct {
 	trade_type       *TradeType
 	currency_pair_id *int
 
-	onMessage func(string, Order)
+	f func(string, Order)
 }
 
 func (s *WebsocketGlassRowChangedService) Do(ctx context.Context, opts ...RequestOption) error {
-	s.c.Channel = fmt.Sprintf("%s_data%d", strings.ToLower(string(*s.trade_type)), *s.currency_pair_id)
-	s.c.EventName = "App\\\\Events\\\\GlassRowChanged"
+	if s.trade_type == nil {
+		return fmt.Errorf("trade_type not init")
+	}
 
-	return s.c.Do(ctx, opts...)
+	if s.currency_pair_id == nil {
+		return fmt.Errorf("currency_pair_id not init")
+	}
+
+	channel := fmt.Sprintf("%s_data%d", strings.ToLower(string(*s.trade_type)), *s.currency_pair_id)
+	err := s.c.Subscribe(channel, false)
+	if err != nil {
+		return err
+	}
+
+	err = s.c.C().On("App\\\\Events\\\\GlassRowChanged", func(h *ws.Channel, msg Order) {
+		s.f(strings.ToLower(string(*s.trade_type)), msg)
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *WebsocketGlassRowChangedService) TradeType(side TradeType) *WebsocketGlassRowChangedService {
@@ -35,36 +53,6 @@ func (s *WebsocketGlassRowChangedService) CurrencyPairId(currency_pair_id int) *
 }
 
 func (s *WebsocketGlassRowChangedService) OnMessage(f func(string, Order)) *WebsocketGlassRowChangedService {
-	/*
-		if s.trade_type == nil {
-			s.c.Logger.Fatal(fmt.Errorf("Init trade_type before set OnMessage"))
-		}
-
-		if s.currency_pair_id == nil {
-			s.c.Logger.Fatal(fmt.Errorf("Init currency_pair_id before set OnMessage"))
-		}
-	*/
-	s.onMessage = f
-
-	// Hack. Will be refactored after understanding the package reflect
-	s.c.OnMessage = func(h *ws.Channel, msg Order) {
-		s.onMessage(s.c.Channel, msg)
-	}
-
-	return s
-}
-
-func (s *WebsocketGlassRowChangedService) OnDisconnect(f func(string)) *WebsocketGlassRowChangedService {
-	s.c.OnDisconnect = f
-	return s
-}
-
-func (s *WebsocketGlassRowChangedService) OnError(f func(string)) *WebsocketGlassRowChangedService {
-	s.c.OnError = f
-	return s
-}
-
-func (s *WebsocketGlassRowChangedService) OnConnection(f func(string)) *WebsocketGlassRowChangedService {
-	s.c.OnConnection = f
+	s.f = f
 	return s
 }

@@ -7,17 +7,17 @@ import (
 )
 
 type OrderInfo struct {
-	Id              int64     `json:"id"`
-	CurrencyPairId  int       `json:"currency_pair_id"`
-	Price           string    `json:"price"`
-	TriggerPrice    float64   `json:"trigger_price"`
-	InitialAmount   string    `json:"initial_amount"`
-	ProcessedAmount string    `json:"processed_amount"`
-	Type            OrderType `json:"type"`
-	OriginalType    OrderType `json:"original_type"`
-	Created         string    `json:"created"`
-	Timestamp       int64     `json:"timestamp"`
-	Status          string    `json:"status"`
+	Id              int64       `json:"id"`
+	CurrencyPairId  int         `json:"currency_pair_id"`
+	Price           string      `json:"price"`
+	TriggerPrice    float64     `json:"trigger_price"`
+	InitialAmount   string      `json:"initial_amount"`
+	ProcessedAmount string      `json:"processed_amount"`
+	Type            OrderType   `json:"type"`
+	OriginalType    OrderType   `json:"original_type"`
+	Created         string      `json:"created"`
+	Timestamp       string      `json:"timestamp"`
+	Status          OrderStatus `json:"status"`
 }
 
 type DeletedOrders struct {
@@ -274,6 +274,11 @@ func (s *CreateOrderService) Do(ctx context.Context, opts ...RequestOption) (*Or
 	}
 
 	return &res.Data, err
+}
+
+func (s *CreateOrderService) CurrencyPairId(pair_id int) *CreateOrderService {
+	s.pair_id = &pair_id
+	return s
 }
 
 func (s *CreateOrderService) OrderType(order_type OrderType) *CreateOrderService {

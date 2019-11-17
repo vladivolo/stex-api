@@ -44,18 +44,18 @@ type ProfileInfo struct {
 }
 
 type Wallet struct {
-	Id              int64              `json:"id"`
-	CurrencyId      int                `json:"currency_id"`
-	Delisted        bool               `json:"delisted"`
-	Disabled        bool               `json:"disabled"`
-	DisableDeposits bool               `json:"disable_deposits"`
-	CurrencyCode    string             `json:"currency_code"`
-	CurrencyName    string             `json:"currency_name"`
-	OfficialUrl     string             `json:"official_url"`
-	Rates           map[string]float64 `json:"rates"`
-	Balance         string             `json:"balance"`
-	FrozenBalance   string             `json:"frozen_balance"`
-	BonusBalance    string             `json:"bonus_balance"`
+	Id              int64             `json:"id"`
+	CurrencyId      int               `json:"currency_id"`
+	Delisted        bool              `json:"delisted"`
+	Disabled        bool              `json:"disabled"`
+	DisableDeposits bool              `json:"disable_deposits"`
+	CurrencyCode    string            `json:"currency_code"`
+	CurrencyName    string            `json:"currency_name"`
+	OfficialUrl     string            `json:"official_url"`
+	Rates           map[string]string `json:"rates"`
+	Balance         string            `json:"balance"`
+	FrozenBalance   string            `json:"frozen_balance"`
+	BonusBalance    string            `json:"bonus_balance"`
 }
 
 type Address struct {
@@ -69,19 +69,19 @@ type Address struct {
 }
 
 type WalletAdv struct {
-	Id                            int64              `json:"id"`
-	CurrencyId                    int                `json:"currency_id"`
-	Delisted                      bool               `json:"delisted"`
-	Disabled                      bool               `json:"disabled"`
-	DisableDeposits               bool               `json:"disable_deposits"`
-	Code                          string             `json:"code"`
-	Balance                       string             `json:"balance"`
-	FrozenBalance                 string             `json:"frozen_balance"`
-	BonusBalance                  string             `json:"bonus_balance"`
-	DepositAddress                Address            `json:"deposit_address"`
-	MultiDepositAddress           Address            `json:"multi_deposit_address"`
-	WithdrawalAdditionalFieldName string             `json:"withdrawal_additional_field_name"`
-	Rates                         map[string]float64 `json:"rates"`
+	Id                            int64             `json:"id"`
+	CurrencyId                    int               `json:"currency_id"`
+	Delisted                      bool              `json:"delisted"`
+	Disabled                      bool              `json:"disabled"`
+	DisableDeposits               bool              `json:"disable_deposits"`
+	Code                          string            `json:"code"`
+	Balance                       string            `json:"balance"`
+	FrozenBalance                 string            `json:"frozen_balance"`
+	BonusBalance                  string            `json:"bonus_balance"`
+	DepositAddress                Address           `json:"deposit_address"`
+	MultiDepositAddress           Address           `json:"multi_deposit_address"`
+	WithdrawalAdditionalFieldName string            `json:"withdrawal_additional_field_name"`
+	Rates                         map[string]string `json:"rates"`
 }
 
 type ProfileInfoService struct {

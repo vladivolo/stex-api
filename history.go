@@ -11,8 +11,8 @@ type Trade struct {
 	Id          int64     `json:"id"`
 	BuyOrderId  int64     `json:"buy_order_id"`
 	SellOrderId int64     `json:"sell_order_id"`
-	Price       float64   `json:"price"`
-	Amount      float64   `json:"amount"`
+	Price       string    `json:"price"`
+	Amount      string    `json:"amount"`
 	TradeType   TradeType `json:"trade_type"`
 	Timestamp   string    `json:"timestamp"`
 }
@@ -61,11 +61,11 @@ func (s *OrdersHistoryService) Do(ctx context.Context, opts ...RequestOption) ([
 	}
 
 	if s.time_start != nil {
-		r.setParam("timeStart", s.time_start.UTC().Format("2006-01-02 15:04:05"))
+		r.setParam("timeStart", s.time_start.UTC().Unix())
 	}
 
 	if s.time_end != nil {
-		r.setParam("timeEnd", s.time_end.UTC().Format("2006-01-02 15:04:05"))
+		r.setParam("timeEnd", s.time_end.UTC().Unix())
 	}
 
 	if s.order_status != nil {
@@ -191,11 +191,11 @@ func (s *CurrencyPairTradesHistoryService) Do(ctx context.Context, opts ...Reque
 	}
 
 	if s.time_start != nil {
-		r.setParam("timeStart", s.time_start.UTC().Format("2006-01-02 15:04:05"))
+		r.setParam("timeStart", s.time_start.UTC().Unix())
 	}
 
 	if s.time_end != nil {
-		r.setParam("timeEnd", s.time_end.UTC().Format("2006-01-02 15:04:05"))
+		r.setParam("timeEnd", s.time_end.UTC().Unix())
 	}
 
 	if s.limit != nil {
