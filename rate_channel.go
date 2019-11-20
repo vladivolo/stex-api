@@ -1,8 +1,6 @@
 package stex
 
 import (
-	"context"
-
 	ws "github.com/vladivolo/golang-socketio"
 )
 
@@ -25,7 +23,7 @@ type WebsocketRateChannelService struct {
 	f func(string, RateMessage)
 }
 
-func (s *WebsocketRateChannelService) Do(ctx context.Context, opts ...RequestOption) error {
+func (s *WebsocketRateChannelService) Do() error {
 	err := s.c.Subscribe("rate", false)
 	if err != nil {
 		return err

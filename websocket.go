@@ -22,19 +22,19 @@ type WssClient struct {
 
 	connected bool
 
-	OnDisconnect func()
-	OnError      func()
-	OnConnection func()
+	onDisconnect func()
+	onError      func()
+	onConnection func()
 
 	c *ws.Client
 }
 
-func newWssClient(APIKey string) *WssClient {
+func NewWssClient(APIKey string) *WssClient {
 	return &WssClient{
 		APIKey:    APIKey,
 		BaseURL:   "wss://socket.stex.com/socket.io/?EIO=3&transport=websocket",
 		UserAgent: "Stex/golang",
-		Debug:     true,
+		Debug:     false,
 		Logger:    log.New(os.Stderr, "Stex-golang-wss ", log.LstdFlags),
 	}
 }
@@ -79,7 +79,7 @@ func (w *WssClient) IsConnected() bool {
 	return w.connected
 }
 
-func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) error {
+func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) (*WssClient, error) {
 	w.Lock()
 	defer w.Unlock()
 
@@ -98,7 +98,7 @@ func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) error {
 
 	if err != nil {
 		w.debug("Dial: %s", err)
-		return err
+		return nil, err
 	}
 
 	err = w.c.On(ws.OnDisconnection, func(h *ws.Channel) {
@@ -106,22 +106,22 @@ func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) error {
 
 		w.SetConnected(false)
 
-		if w.OnDisconnect != nil {
-			w.OnDisconnect()
+		if w.onDisconnect != nil {
+			go w.onDisconnect()
 		}
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = w.c.On(ws.OnError, func(h *ws.Channel) {
 		w.debug("OnError:", err)
-		if w.OnError != nil {
-			w.OnError()
+		if w.onError != nil {
+			w.onError()
 		}
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = w.c.On(ws.OnConnection, func(h *ws.Channel) {
@@ -129,12 +129,12 @@ func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) error {
 
 		w.SetConnected(true)
 
-		if w.OnConnection != nil {
-			w.OnConnection()
+		if w.onConnection != nil {
+			go w.onConnection()
 		}
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	go func() {
@@ -146,7 +146,22 @@ func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) error {
 		}
 	}()
 
-	return nil
+	return w, nil
+}
+
+func (w *WssClient) OnConnection(f func()) *WssClient {
+	w.onConnection = f
+	return w
+}
+
+func (w *WssClient) OnDisconnect(f func()) *WssClient {
+	w.onDisconnect = f
+	return w
+}
+
+func (w *WssClient) OnError(f func()) *WssClient {
+	w.onError = f
+	return w
 }
 
 func NewWebsocketRateChannelService(c *WssClient) *WebsocketRateChannelService {
@@ -167,4 +182,8 @@ func NewWebsocketUserOrderDeletedChannelService(c *WssClient) *WebsocketUserOrde
 
 func NewWebsocketUserOrderUpdateChannelService(c *WssClient) *WebsocketUserOrderUpdateChannelService {
 	return &WebsocketUserOrderUpdateChannelService{c: c}
+}
+
+func NewWebsocketUserBalanceUpdateChannelService(c *WssClient) *WebsocketUserBalanceUpdateChannelService {
+	return &WebsocketUserBalanceUpdateChannelService{c: c}
 }

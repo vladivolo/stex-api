@@ -1,7 +1,6 @@
 package stex
 
 import (
-	"context"
 	"fmt"
 	"strings"
 
@@ -19,19 +18,19 @@ type TradeOrder struct {
 }
 
 type DeleteOrder struct {
-	Id             int64  `json:"id"`
-	UserId         int64  `json:"user_id"`
-	CurrencyPairId int    `json:"currency_pair_id"`
-	Status         string `json:"status"`
+	Id             int64       `json:"id"`
+	UserId         int64       `json:"user_id"`
+	CurrencyPairId int         `json:"currency_pair_id"`
+	Status         OrderStatus `json:"status"`
 }
 
 type UpdateOrder struct {
-	Id             int64   `json:"id"`
-	UserId         int64   `json:"user_id"`
-	CurrencyPairId int     `json:"currency_pair_id"`
-	Price          string  `json:"price"`
-	Amount         string  `json:"amount"`
-	Amount2        float64 `json:"amount2"`
+	Id             int64  `json:"id"`
+	UserId         int64  `json:"user_id"`
+	CurrencyPairId int    `json:"currency_pair_id"`
+	Price          string `json:"price"`
+	Amount         string `json:"amount"`
+	Amount2        string `json:"amount2"`
 }
 
 type WebsocketUserOrderFillChannelService struct {
@@ -43,7 +42,7 @@ type WebsocketUserOrderFillChannelService struct {
 	f func(string, TradeOrder)
 }
 
-func (s *WebsocketUserOrderFillChannelService) Do(ctx context.Context, opts ...RequestOption) error {
+func (s *WebsocketUserOrderFillChannelService) Do() error {
 	if s.user_id == nil {
 		return fmt.Errorf("user_id not init")
 	}
@@ -95,7 +94,7 @@ type WebsocketUserOrderDeletedChannelService struct {
 	f func(string, DeleteOrder)
 }
 
-func (s *WebsocketUserOrderDeletedChannelService) Do(ctx context.Context, opts ...RequestOption) error {
+func (s *WebsocketUserOrderDeletedChannelService) Do() error {
 	if s.user_id == nil {
 		return fmt.Errorf("user_id not init")
 	}
@@ -145,10 +144,10 @@ type WebsocketUserOrderUpdateChannelService struct {
 	currency_pair_id *int
 	order_type       *OrderType
 
-	f func(string, UpdateOrder)
+	f func(OrderType, UpdateOrder)
 }
 
-func (s *WebsocketUserOrderUpdateChannelService) Do(ctx context.Context, opts ...RequestOption) error {
+func (s *WebsocketUserOrderUpdateChannelService) Do() error {
 	if s.user_id == nil {
 		return fmt.Errorf("user_id not init")
 	}
@@ -168,8 +167,8 @@ func (s *WebsocketUserOrderUpdateChannelService) Do(ctx context.Context, opts ..
 	}
 
 	err = s.c.C().On("App\\\\Events\\\\UserOrder", func(h *ws.Channel, msg UpdateOrder) {
-		s.f(string(*s.order_type), msg)
-	})
+		s.f(*s.order_type, msg)
+	}, channel)
 	if err != nil {
 		return err
 	}
@@ -193,7 +192,7 @@ func (s *WebsocketUserOrderUpdateChannelService) OrderType(order_type OrderType)
 	return s
 }
 
-func (s *WebsocketUserOrderUpdateChannelService) OnMessage(f func(string, UpdateOrder)) *WebsocketUserOrderUpdateChannelService {
+func (s *WebsocketUserOrderUpdateChannelService) OnMessage(f func(OrderType, UpdateOrder)) *WebsocketUserOrderUpdateChannelService {
 	s.f = f
 	return s
 }

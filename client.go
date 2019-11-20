@@ -14,6 +14,7 @@ import (
 type SortOrder string
 type CandleType string
 type OrderType string
+type TradeSide string
 type OrderStatus string
 type TradeType string
 type SortBalanceField string
@@ -24,6 +25,9 @@ const (
 
 	SortDesc SortOrder = "DESC"
 	SortAsc  SortOrder = "ASC"
+
+	TradeSideAsks TradeSide = "asks"
+	TradeSideBids TradeSide = "bids"
 
 	SortByBalance SortBalanceField = "BALANCE"
 	SortByFrozen  SortBalanceField = "FROZEN"
@@ -50,6 +54,7 @@ const (
 	OrderStatus_FINISHED    OrderStatus = "FINISHED"
 	OrderStatus_CANCELLED   OrderStatus = "CANCELLED"
 	OrderStatus_PARTIAL     OrderStatus = "PARTIAL"
+	OrderStatus_PENDING     OrderStatus = "PENDING"
 	OrderStatus_WITH_TRADES OrderStatus = "WITH_TRADES"
 )
 
@@ -76,7 +81,7 @@ func NewClient(apiKey string) *Client {
 		BaseURL:    "https://api3.stex.com",
 		UserAgent:  "Stex/golang",
 		HTTPClient: http.DefaultClient,
-		Debug:      true,
+		Debug:      false,
 		Logger:     log.New(os.Stderr, "Stex-golang ", log.LstdFlags),
 	}
 }

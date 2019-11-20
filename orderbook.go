@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Order struct {
@@ -13,6 +15,19 @@ type Order struct {
 	Amount2          string  `json:"amount2"`
 	Count            int     `json:"count"`
 	CumulativeAmount float64 `json:"cumulative_amount"`
+}
+
+func (o *Order) Fields() logrus.Fields {
+	return logrus.Fields{
+		"order_book": map[string]interface{}{
+			"currency_pair_id":  o.CurrencyPairId,
+			"amount":            o.Amount,
+			"price":             o.Price,
+			"amount2":           o.Amount2,
+			"count":             o.Count,
+			"cumulative_amount": o.CumulativeAmount,
+		},
+	}
 }
 
 type OrderBook struct {

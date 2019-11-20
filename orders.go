@@ -16,7 +16,7 @@ type OrderInfo struct {
 	Type            OrderType   `json:"type"`
 	OriginalType    OrderType   `json:"original_type"`
 	Created         string      `json:"created"`
-	Timestamp       string      `json:"timestamp"`
+	Timestamp       interface{} `json:"timestamp"`
 	Status          OrderStatus `json:"status"`
 }
 
@@ -215,9 +215,9 @@ type CreateOrderService struct {
 	pair_id *int
 
 	order_type    *OrderType //(BUY / SELL / STOP_LIMIT_BUY / STOP_LIMIT_SELL)
-	amount        *float64
-	price         *float64
-	trigger_price *float64
+	amount        *string
+	price         *string
+	trigger_price *string
 }
 
 // Do send request
@@ -233,7 +233,7 @@ func (s *CreateOrderService) Do(ctx context.Context, opts ...RequestOption) (*Or
 	}
 
 	if s.order_type != nil {
-		r.setFormParam("order_type", *s.order_type)
+		r.setFormParam("type", string(*s.order_type))
 	} else {
 		return nil, fmt.Errorf("order_type not init")
 	}
@@ -286,17 +286,17 @@ func (s *CreateOrderService) OrderType(order_type OrderType) *CreateOrderService
 	return s
 }
 
-func (s *CreateOrderService) Amount(amount float64) *CreateOrderService {
+func (s *CreateOrderService) Amount(amount string) *CreateOrderService {
 	s.amount = &amount
 	return s
 }
 
-func (s *CreateOrderService) Price(price float64) *CreateOrderService {
+func (s *CreateOrderService) Price(price string) *CreateOrderService {
 	s.price = &price
 	return s
 }
 
-func (s *CreateOrderService) TriggerPrice(price float64) *CreateOrderService {
+func (s *CreateOrderService) TriggerPrice(price string) *CreateOrderService {
 	s.trigger_price = &price
 	return s
 }
@@ -346,9 +346,13 @@ type OrderDeleteService struct {
 
 // Do send request
 func (s *OrderDeleteService) Do(ctx context.Context, opts ...RequestOption) (*DeletedOrders, error) {
+	if s.order_id == nil {
+		return nil, fmt.Errorf("order_id not init")
+	}
+
 	r := &request{
 		method:   "DELETE",
-		endpoint: fmt.Sprintf("/trading/order/%d", s.order_id),
+		endpoint: fmt.Sprintf("/trading/order/%d", *s.order_id),
 		secType:  secTypeAPIKey,
 	}
 

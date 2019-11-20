@@ -61,15 +61,15 @@ func (s *OrdersHistoryService) Do(ctx context.Context, opts ...RequestOption) ([
 	}
 
 	if s.time_start != nil {
-		r.setParam("timeStart", s.time_start.UTC().Unix())
+		r.setParam("timeStart", s.time_start.Unix())
 	}
 
 	if s.time_end != nil {
-		r.setParam("timeEnd", s.time_end.UTC().Unix())
+		r.setParam("timeEnd", s.time_end.Unix())
 	}
 
 	if s.order_status != nil {
-		r.setParam("order_status", *s.order_status)
+		r.setParam("orderStatus", *s.order_status)
 	}
 
 	if s.limit != nil {

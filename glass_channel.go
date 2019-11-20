@@ -1,7 +1,6 @@
 package stex
 
 import (
-	"context"
 	"fmt"
 	"strings"
 
@@ -14,10 +13,10 @@ type WebsocketGlassRowChangedService struct {
 	trade_type       *TradeType
 	currency_pair_id *int
 
-	f func(string, Order)
+	f func(TradeType, Order)
 }
 
-func (s *WebsocketGlassRowChangedService) Do(ctx context.Context, opts ...RequestOption) error {
+func (s *WebsocketGlassRowChangedService) Do() error {
 	if s.trade_type == nil {
 		return fmt.Errorf("trade_type not init")
 	}
@@ -33,8 +32,8 @@ func (s *WebsocketGlassRowChangedService) Do(ctx context.Context, opts ...Reques
 	}
 
 	err = s.c.C().On("App\\\\Events\\\\GlassRowChanged", func(h *ws.Channel, msg Order) {
-		s.f(strings.ToLower(string(*s.trade_type)), msg)
-	})
+		s.f(*s.trade_type, msg)
+	}, channel)
 	if err != nil {
 		return err
 	}
@@ -52,7 +51,7 @@ func (s *WebsocketGlassRowChangedService) CurrencyPairId(currency_pair_id int) *
 	return s
 }
 
-func (s *WebsocketGlassRowChangedService) OnMessage(f func(string, Order)) *WebsocketGlassRowChangedService {
+func (s *WebsocketGlassRowChangedService) OnMessage(f func(TradeType, Order)) *WebsocketGlassRowChangedService {
 	s.f = f
 	return s
 }
