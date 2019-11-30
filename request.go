@@ -70,10 +70,3 @@ func (r *request) validate() (err error) {
 
 // RequestOption define option type for request
 type RequestOption func(*request)
-
-// WithRecvWindow set recvWindow param for the request
-func WithRecvWindow(recvWindow int64) RequestOption {
-	return func(r *request) {
-		r.recvWindow = recvWindow
-	}
-}
