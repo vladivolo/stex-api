@@ -2,7 +2,6 @@ package stex
 
 import (
 	"fmt"
-	"strings"
 
 	ws "github.com/vladivolo/golang-socketio"
 )
@@ -187,7 +186,6 @@ func (s *WebsocketUserOrderUpdateChannelService) CurrencyPairId(currency_pair_id
 }
 
 func (s *WebsocketUserOrderUpdateChannelService) OrderType(order_type OrderType) *WebsocketUserOrderUpdateChannelService {
-	order_type = OrderType(strings.ToLower(string(order_type)))
 	s.order_type = &order_type
 	return s
 }
