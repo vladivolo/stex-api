@@ -108,6 +108,7 @@ func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) (*WssClient, 
 
 		if w.onDisconnect != nil {
 			go w.onDisconnect()
+			//w.onDisconnect()
 		}
 	})
 	if err != nil {
@@ -131,6 +132,7 @@ func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) (*WssClient, 
 
 		if w.onConnection != nil {
 			go w.onConnection()
+			//w.onConnection()
 		}
 	})
 	if err != nil {
