@@ -46,6 +46,10 @@ func (w *WssClient) debug(format string, v ...interface{}) {
 }
 
 func (w *WssClient) Subscribe(channel string, auth bool) error {
+	if w.c == nil {
+		return fmt.Errorf("ws connection closed")
+	}
+
 	auth_token := map[string]interface{}{}
 	if auth == true {
 		auth_token = map[string]interface{}{
@@ -143,7 +147,10 @@ func (w *WssClient) Do(ctx context.Context, opts ...RequestOption) (*WssClient, 
 		select {
 		case <-ctx.Done():
 			w.debug("Context Done()")
-			w.c.Close()
+			if w.c != nil {
+				w.c.Close()
+				w.c = nil
+			}
 			return
 		}
 	}()
